@@ -21,4 +21,9 @@ app.use(cors());
 
 app.use('/api/users', usersRouter);
 app.use('/api/items', itemsRouter);
+
+app.get('/', (req, res) => {
+  res.send('Welcome');
+});
+
 app.listen(port, () => console.log(`App is listening to PORT ${port}`));
