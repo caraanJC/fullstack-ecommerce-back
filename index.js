@@ -9,7 +9,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 mongoose.connect(
-  'mongodb+srv://<user>:<1234>@cluster0.vklrd.mongodb.net/7JsKitchen?retryWrites=true&w=majority',
+  'mongodb+srv://user:1234@cluster0.vklrd.mongodb.net/7JsKitchen?retryWrites=true&w=majority',
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
