@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "client": "cd ../client && npm start",
-    "start": "concurrently \"nodemon index.js\" \"npm run client\""
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
