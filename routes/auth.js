@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
     bcrypt.compare(req.body.password, user.password, (err, result) => {
       if (result) {
         const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
-        res.header('auth-token', token).send(token);
+        res.header('auth-token', token).send({ token, user });
       } else {
         res.status(400).send({ error: 'Username or password is wrong' });
       }
