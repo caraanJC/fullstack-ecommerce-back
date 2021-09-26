@@ -1,10 +1,10 @@
 import express from 'express';
-
+import verify from './verifyToken.js';
 import Users from '../models/users.model.js';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', verify, (req, res) => {
   Users.findById(req.user).then((data) => {
     if (data.roles.includes('admin'))
       Users.find().then((data) => res.send(data));
