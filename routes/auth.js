@@ -33,7 +33,9 @@ router.post('/register', async (req, res) => {
 
     res.send({ user: newUser._id });
   } catch (err) {
-    res.status(400).send(err.details[0].message ? err.details[0].message : err);
+    res
+      .status(400)
+      .send({ err: err.details[0].message ? err.details[0].message : err });
   }
 });
 
@@ -52,11 +54,11 @@ router.post('/login', async (req, res) => {
         const token = jwt.sign({ _id: user._id }, process.env.TOKEN_SECRET);
         res.header('auth-token', token).send(user);
       } else {
-        res.status(400).send('Username or password is wrong');
+        res.status(400).send({ error: 'Username or password is wrong' });
       }
     });
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).send({ error });
   }
 });
 
