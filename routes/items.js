@@ -1,18 +1,26 @@
 import express from 'express';
 import Items from '../models/items.model.js';
+import Users from '../models/users.model.js';
+import verify from './verifyToken.js';
 
 const router = express.Router();
 
 // create an item
-router.post('/addItem', (req, res) => {
-  Items.findOne({ name: req.body.name }).then((data) => {
-    if (!data) {
-      let newItem = new Items(req.body);
-      newItem.save().then((data) => {
-        res.send({ message: 'Item added Successfully' });
+router.post('/addItem', verify, (req, res) => {
+  Users.findById(req.user._id).then((data) => {
+    if (
+      ['admin', 'employee', 'manager'].some((role) => data.roles.includes(role))
+    ) {
+      Items.findOne({ name: req.body.name }).then((data) => {
+        if (!data) {
+          let newItem = new Items(req.body);
+          newItem.save().then((data) => {
+            res.send({ message: 'Item added Successfully' });
+          });
+        } else {
+          res.send({ error: 'Item is already in the shop' });
+        }
       });
-    } else {
-      res.send({ error: 'Item is already in the shop' });
     }
   });
 });
@@ -32,16 +40,28 @@ router.get('/:id', (req, res) => {
 });
 
 // update an item
-router.put('/editItem', (req, res) => {
-  Items.findByIdAndUpdate(req.body._id, req.body).then((data) => {
-    res.send({ message: 'Item has been updated' });
+router.put('/editItem', verify, (req, res) => {
+  Users.findById(req.user._id).then((data) => {
+    if (
+      ['admin', 'employee', 'manager'].some((role) => data.roles.includes(role))
+    ) {
+      Items.findByIdAndUpdate(req.body._id, req.body).then((data) => {
+        res.send({ message: 'Item has been updated' });
+      });
+    }
   });
 });
 
 // delete an item
-router.delete('/deleteItem/:id', (req, res) => {
-  Items.findByIdAndDelete(req.params.id).then((data) => {
-    res.send({ message: 'Item has been deleted' });
+router.delete('/deleteItem/:id', verify, (req, res) => {
+  Users.findById(req.user._id).then((data) => {
+    if (
+      ['admin', 'employee', 'manager'].some((role) => data.roles.includes(role))
+    ) {
+      Items.findByIdAndDelete(req.params.id).then((data) => {
+        res.send({ message: 'Item has been deleted' });
+      });
+    }
   });
 });
 
