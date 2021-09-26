@@ -1,28 +1,28 @@
 import express from 'express';
-import verify from './verifyToken.js';
+
 import Users from '../models/users.model.js';
 
 const router = express.Router();
 
-router.get('/', verify, (req, res) => {
+router.get('/', (req, res) => {
   Users.findById(req.user).then((data) => {
     if (data.roles.includes('admin'))
       Users.find().then((data) => res.send(data));
   });
 });
 
-router.get('/:id', verify, (req, res) => {
+router.get('/:id', (req, res) => {
   Users.findById(req.user).then((data) => {
     if (data.roles.includes('admin'))
       Users.findOne({ _id: req.params.id }).then((data) => res.send(data));
   });
 });
 
-router.get('/currentUser', verify, (req, res) => {
+router.get('/currentUser', (req, res) => {
   Users.findOne({ _id: req.user }).then((data) => res.send(data));
 });
 
-router.delete('/:id', verify, (req, res) => {
+router.delete('/:id', (req, res) => {
   Users.findById(req.user).then((data) => {
     if (data.roles.includes('admin'))
       Users.findByIdAndDelete(req.params.id).then((data) =>
@@ -32,7 +32,7 @@ router.delete('/:id', verify, (req, res) => {
 });
 
 // suspend user
-router.put('/:id/suspend', verify, (req, res) => {
+router.put('/:id/suspend', (req, res) => {
   Users.findById(req.user).then((data) => {
     if (data.roles.includes('admin'))
       Users.findByIdAndUpdate(req.params.id, {
@@ -42,7 +42,7 @@ router.put('/:id/suspend', verify, (req, res) => {
 });
 
 // remove suspension
-router.put('/:id/lift', verify, (req, res) => {
+router.put('/:id/lift', (req, res) => {
   Users.findById(req.user).then((data) => {
     if (data.roles.includes('admin'))
       Users.findByIdAndUpdate(req.params.id, {
@@ -54,14 +54,14 @@ router.put('/:id/lift', verify, (req, res) => {
 // CART ITEMS
 
 // addToCart
-router.put('/cart/addToCart', verify, (req, res) => {
+router.put('/cart/addToCart', (req, res) => {
   Users.findByIdAndUpdate(req.user, {
     $addToSet: { cartItems: req.body },
   }).then((data) => res.send({ message: 'Item Added To Cart' }));
 });
 
 // increaseCount
-router.put('/cart/increaseCount', verify, (req, res) => {
+router.put('/cart/increaseCount', (req, res) => {
   Users.updateOne(
     { _id: req.user, 'cartItems._id': req.body._id },
     {
@@ -71,14 +71,14 @@ router.put('/cart/increaseCount', verify, (req, res) => {
 });
 
 // delete cart Item
-router.put('/cart/deleteCartItem', verify, (req, res) => {
+router.put('/cart/deleteCartItem', (req, res) => {
   Users.findByIdAndUpdate(req.user, {
     $pull: { cartItems: { _id: req.body._id } },
   }).then((data) => res.send({ message: 'cart Item deleted' }));
 });
 
 // empty cart
-router.put('/cart/emptyCart', verify, (req, res) => {
+router.put('/cart/emptyCart', (req, res) => {
   Users.findByIdAndUpdate(req.user, {
     $set: { cartItems: [] },
   }).then((data) => res.send({ message: 'cart Item deleted' }));
@@ -86,7 +86,7 @@ router.put('/cart/emptyCart', verify, (req, res) => {
 
 // Orders
 // Add order
-router.put('/order/addOrder', verify, (req, res) => {
+router.put('/order/addOrder', (req, res) => {
   Users.findByIdAndUpdate(req.user, {
     $push: { orders: req.body },
   }).then((data) => res.send('Order complete'));
@@ -94,7 +94,7 @@ router.put('/order/addOrder', verify, (req, res) => {
 
 // Edit Order
 // needs {_id: String, status: String}
-router.put('/order/editOrder', verify, (req, res) => {
+router.put('/order/editOrder', (req, res) => {
   Users.findById(req.user).then((data) => {
     if (data.roles.includes('admin')) {
       Users.updateOne(
@@ -108,21 +108,21 @@ router.put('/order/editOrder', verify, (req, res) => {
 });
 
 // cancel order
-router.put('/order/cancelOrder', verify, (req, res) => {
+router.put('/order/cancelOrder', (req, res) => {
   Users.findByIdAndUpdate(req.user, {
     $pull: { orders: { _id: req.body._id } },
   }).then((data) => res.send({ message: 'cart Item deleted' }));
 });
 
 //edit Profile
-router.put('/profile/editProfile', verify, (req, res) => {
+router.put('/profile/editProfile', (req, res) => {
   Users.findByIdAndUpdate(req.user, req.body).then((data) =>
     res.send('User Profile Updated')
   );
 });
 
 // change lastAddress
-router.put('/profile/changeLastAddress', verify, (req, res) => {
+router.put('/profile/changeLastAddress', (req, res) => {
   Users.findByIdAndUpdate(req.user, {
     $set: { lastAddress: req.body.lastAddress },
   }).then((data) => res.send('Changed Last Address'));
