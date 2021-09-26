@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
 
     const usernameExists = await Users.findOne({ username: req.body.username });
 
-    if (emailExists || usernameExists) {
+    if (usernameExists) {
       return res
         .status(400)
         .send(`${usernameExists ? 'username' : 'email'} exists`);
