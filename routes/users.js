@@ -5,7 +5,7 @@ import Users from '../models/users.model.js';
 const router = express.Router();
 
 router.get('/', verify, (req, res) => {
-  Users.findById(req.user).then((data) => {
+  Users.findById(req.user._id).then((data) => {
     if (data.roles.includes('admin'))
       Users.find().then((data) => res.send(data));
   });
