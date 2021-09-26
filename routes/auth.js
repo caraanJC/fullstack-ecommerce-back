@@ -21,7 +21,6 @@ router.post('/register', async (req, res) => {
     await registerValidation(req.body);
 
     const usernameExists = await Users.findOne({ username: req.body.username });
-    const emailExists = await Users.findOne({ email: req.body.email });
 
     if (emailExists || usernameExists) {
       return res
