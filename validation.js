@@ -5,6 +5,7 @@ const registerValidation = (data) => {
   const schema = Joi.object({
     username: Joi.string().min(6).max(255).required(),
     password: Joi.string().min(6).max(255).required(),
+    roles: Joi.array().required(),
   });
   return schema.validateAsync(data);
 };
