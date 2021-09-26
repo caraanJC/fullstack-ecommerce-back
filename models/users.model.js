@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const UsersSchema = new Schema({
-  username: String,
-  password: String,
-  email: String,
+  username: { type: String, required: true, min: 6, max: 255 },
+  password: { type: String, required: true, min: 6, max: 1024 },
+  email: { type: String, required: true, min: 6, max: 255 },
+  date: { type: Date, default: Date.now },
   firstName: String,
   lastName: String,
   fb: String,
@@ -26,5 +27,4 @@ const UsersSchema = new Schema({
   ],
 });
 
-const Users = mongoose.model('Users', UsersSchema);
-export default Users;
+export default mongoose.model('Users', UsersSchema);
