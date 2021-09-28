@@ -5,6 +5,13 @@ import verify from './verifyToken.js';
 
 const router = express.Router();
 
+// Get all Items
+router.get('/', (req, res) => {
+  Items.find().then((data) => {
+    res.send(data);
+  });
+});
+
 // create an item
 router.post('/addItem', verify, (req, res) => {
   Users.findById(req.user._id).then((data) => {
@@ -22,13 +29,6 @@ router.post('/addItem', verify, (req, res) => {
         }
       });
     }
-  });
-});
-
-// Get all Items
-router.get('/', (req, res) => {
-  Items.find().then((data) => {
-    res.send(data);
   });
 });
 
